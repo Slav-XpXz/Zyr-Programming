@@ -7,7 +7,6 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix='$', intents=intents)
-client.remove_command('help')
 
 @client.event
 async def on_ready():
@@ -141,8 +140,35 @@ async def patreon(ctx):
   await ctx.send("https://www.patreon.com/slav_XpXz")
 
 @client.command()
-async def mwa(ctx):
-  await ctx.send("wtf did you just say to me little bitch.")
+async def mwa(ctx, member: discord.Member = None):
+  if not member:
+    await     ctx.send(f'{ctx.message.author.mention} so lonely trying to kiss your self :skull:')
+
+  await ctx.send(f'{ctx.message.author.mention} kissed {member.mention} pretty sexy')
+@client.command()
+async def colourchroma(ctx, member: discord.Member = None):
+  if not member:
+    member = ctx.message.author
+  await member.edit(nick="Colourchroma")
+  await ctx.send(f'Synth 2.0 that you?! {member.mention}')
+
+
+
+@client.command(alias=['n'])
+async def nick(ctx, member: discord.Member = None, *, nick):
+  await member.edit(nick=nick)
+  await ctx.send(f"Set {member.mention}'s nickname to {nick}")
+
+
+
+
+
+
+
+
+  
+
+
 
 
 TOKEN = os.environ['token']
