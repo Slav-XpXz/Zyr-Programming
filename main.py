@@ -162,11 +162,14 @@ async def nick(ctx, member: discord.Member = None, *, nick):
 
 
 
+@client.command()
+async def ineedhelp(ctx):
+  await ctx.send("I'd rather play Visual Studio Code retard")
 
 
 
 
-  
+
 
 
 
