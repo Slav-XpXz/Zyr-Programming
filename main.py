@@ -1,3 +1,4 @@
+from distutils.command.check import check
 import time
 from tkinter import E
 from webserver import keep_alive
@@ -5,6 +6,7 @@ import os
 import discord
 import asyncio
 import random
+import aiohttp
 from discord.ext import commands
 intents = discord.Intents.default()
 intents.members = True
@@ -142,8 +144,9 @@ async def avatar(ctx, member: discord.Member = None):
   if not member:
     member = ctx.message.author
 
-  embed = discord.Embed(colour=discord.Colour.dark_purple())
+  embed = discord.Embed(title = "Ugly Ass Avatar of " + str(member), colour=discord.Colour.dark_purple())
   embed.set_image(url=member.avatar_url)
+  embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url = ctx.author.avatar_url)
   await ctx.send(embed=embed)
 
 
@@ -201,7 +204,32 @@ async def nick(ctx, member: discord.Member = None, *, nick):
 async def ineedhelp(ctx):
   await ctx.send("I'd rather play Visual Studio Code retard")
 
+@client.command()
+async def meme(ctx):
+  embed = discord.Embed(title="Dumb Fuck Shitpost", color = 0x0876DF)
+  async with aiohttp.ClientSession() as cs:
+    async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
+        res = await r.json()
+        embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+        embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url=ctx.author.avatar.url)
+        await ctx.send(embed=embed)
 
+@client.command()
+async def sex(ctx, member: discord.Member = None):
+  if not member:
+    await ctx.send(f'{ctx.message.author.mention}, nobody wants to see you jerk off. Please kys.')
+  else:
+    try:
+      await ctx.send("Dom or Sub?")
+      msg = await client.wait_for('message', check=check, timeout=21)
+      if msg.content.lower() == 'dom':
+        await ctx.send(f'{ctx.message.author} dommed {str(member)}, kinda hot ngl.')
+      elif msg.content.lower() == 'sub':
+        await ctx.send(f'{ctx.message.author} got dommed by {str(member)}, kinda hot ngl.')
+      else:
+        await ctx.send('Are you fuckng retarded?')
+    except:
+      await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
 TOKEN = os.environ['token']
 keep_alive()
 client.run(TOKEN)
