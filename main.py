@@ -12,11 +12,15 @@ intents.members = True
 intents.message_content = True
 intents.messages = True
 client = commands.Bot(command_prefix='$', intents=intents)
+statuses=['League Of Legends', 'Fortnite', 'Valorant', 'Minecraft', 'Roblox', 'with my pussy', 'with nukes', 'Finding My Father Simulator', 'Getting A Life Simulator', 'Getting Bitches Simulator']
 
 @client.event
 async def on_ready():
   print('Bot is online...')
-  await client.change_presence(status=discord.Status.online, activity=discord.Game('League Of Legends'))
+  while True:
+    for x in statuses:
+      await client.change_presence(status=discord.Status.online, activity=discord.Game(x))
+      await asyncio.sleep(69)
 @client.event
 async def on_command_error(ctx,error):
     if isinstance(error,commands.MissingPermissions):
