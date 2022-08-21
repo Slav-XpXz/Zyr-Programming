@@ -1,37 +1,33 @@
 from distutils.command.check import check
 import time
-from tkinter import E
+import aiohttp
 from webserver import keep_alive
 import os
 import discord
 import asyncio
 import random
-import aiohttp
 from discord.ext import commands
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
+intents.messages = True
 client = commands.Bot(command_prefix='$', intents=intents)
 
 @client.event
 async def on_ready():
   print('Bot is online...')
-  statuses = ['League Of Legends', 'Fortnite', 'Valorant', 'Minecraft', 'Finding My Father', 'with my pussy', 'with nuclear missiles']
-  while True:
-    for x in statuses:
-      await client.change_presence(status=discord.Status.online, activity=discord.Game(x))
-      await asyncio.sleep(69)
-
+  await client.change_presence(status=discord.Status.online, activity=discord.Game('League Of Legends'))
 @client.event
 async def on_command_error(ctx,error):
     if isinstance(error,commands.MissingPermissions):
       embed = discord.Embed(title = "Error", color = 0xfcf528)
       embed.add_field(name = "Permission Missing", value = "You don't have permission to do this, retard.")
-      embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+      embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.display_avatar)
       await ctx.send(embed=embed)
     elif isinstance(error,commands.MissingRequiredArgument):
       embed = discord.Embed(title = "Error", color = 0xfcf528)
       embed.add_field(name = "Arguments Missing", value = "Are you so stupid that you can't run a fucking command?")
-      embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+      embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.display_avatar)
       await ctx.send(embed=embed)
 
 
@@ -40,8 +36,8 @@ async def on_command_error(ctx,error):
 async def kick(ctx, member : discord.Member, *, reason=None):
   embed = discord.Embed(title = "User Was Kicked From Server", color = 0xf03524)
   embed.add_field(name = "User Kicked", value = str(member))
-  embed.add_field(name = "Reason for Kick", value = reason + ' L Bozo + Ratio')
-  embed.set_footer(text = f'Kicked by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+  embed.add_field(name = "Reason for Kick", value = reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.set_footer(text = f'Kicked by {ctx.message.author}', icon_url = ctx.author.display_avatar)
   await ctx.send(embed = embed)
   await member.send('You have been kicked from Zyr Programming Language for:' + reason)
   await member.kick(reason=reason)
@@ -53,8 +49,8 @@ async def kick(ctx, member : discord.Member, *, reason=None):
 async def ban(ctx, member : discord.Member, *, reason=None):
   embed = discord.Embed(title = "User Was Banned From Server", color = 0xcf2376)
   embed.add_field(name = "User Banned", value = str(member))
-  embed.add_field(name = "Reason for Ban", value = reason + ' L Bozo + Ratio')
-  embed.set_footer(text = f'Banned by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+  embed.add_field(name = "Reason for Ban", value = reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.set_footer(text = f'Banned by {ctx.message.author}', icon_url = ctx.author.display_avatar)
   await ctx.send(embed = embed)
   await member.send('You have been banned from Zyr Programming Language for:' + reason)
   await member.ban(reason=reason)
@@ -68,8 +64,8 @@ async def ban(ctx, member : discord.Member, *, reason=None):
 async def warn(ctx, member : discord.Member, *, reason=None):
   await member.send(f'you were warned in Zyr Programming Language for: {reason}')
   embed = discord.Embed(title = "User Warned", color = 0xfcc028)
-  embed.add_field(name = str(member), value = 'Warning: ' + reason + ' L Bozo + Ratio')
-  embed.set_footer(text = f'Warned by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+  embed.add_field(name = str(member), value = 'Warning: ' + reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.set_footer(text = f'Warned by {ctx.message.author}', icon_url = ctx.author.display_avatar)
   await ctx.send(embed = embed)
 
 
@@ -80,7 +76,7 @@ async def whois(ctx, member: discord.Member = None):
       member = ctx.message.author  # set member as the author
     roles = [role for role in member.roles]
     embed = discord.Embed(colour=discord.Colour.dark_purple(), timestamp=ctx.message.created_at, title=f"User Info - {member}")
-    embed.set_thumbnail(url=member.avatar_url)
+    embed.set_thumbnail(url=member.display_avatar)
     embed.add_field(name="ID:", value=member.id)
     embed.add_field(name="Display Name:", value=member.display_name)
 
@@ -90,7 +86,7 @@ async def whois(ctx, member: discord.Member = None):
     embed.add_field(name="Roles:", value="".join([role.mention for role in roles]))
     embed.add_field(name="Highest Role:", value=member.top_role.mention)
 
-    embed.set_footer(text=f"Requested by {ctx.author}", icon_url = ctx.author.avatar_url)
+    embed.set_footer(text=f"Requested by {ctx.author}", icon_url = ctx.author.display_avatar)
     print(member.top_role.mention)
     await ctx.send(embed=embed)
 
@@ -99,8 +95,8 @@ async def whois(ctx, member: discord.Member = None):
 @commands.has_permissions(manage_messages=True)
 async def mute(ctx, member: discord.Member, *, reason=None):
 	embed = discord.Embed(title = "User Muted", color = 0xFFC600)
-	embed.add_field(name = str(member), value = 'Muted: ' + reason + ' L Bozo + Ratio')
-	embed.set_footer(text = f'Muted by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+	embed.add_field(name = str(member), value = 'Muted: ' + reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+	embed.set_footer(text = f'Muted by {ctx.message.author}', icon_url = ctx.author.display_avatar)
 	guild = ctx.guild
 	mutedRole = discord.utils.get(guild.roles, name="Muted")
 	if not mutedRole:
@@ -120,7 +116,7 @@ async def unmute(ctx, member: discord.Member):
 	await member.remove_roles(mutedRole)
 	embed = discord.Embed(title = "User Unmuted", color = 0x72FF1F)
 	embed.add_field(name = str(member), value = "Welcome back, try not to get muted again dumbfuck.")
-	embed.set_footer(text=f'Unmuted by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+	embed.set_footer(text=f'Unmuted by {ctx.message.author}', icon_url = ctx.author.display_avatar)
 	await member.send(f"You were unmuted in Zyr Programming Language.")
 
 @client.command(pass_context=True)
@@ -129,7 +125,7 @@ async def purge(ctx,limit: int):
 	if limit>100:
 		embed = discord.Embed(title = "Error", color = 0xfcf528)
 		embed.add_field(name = "Impossible", value = "The limit is 100, I can't delete more lmfao")
-		embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+		embed.set_footer(text = f'Requested by {ctx.message.author}', icon_url = ctx.author.display_avatar)
 		await ctx.send(embed=embed)
 		return
 	await asyncio.sleep(2)
@@ -144,8 +140,8 @@ async def avatar(ctx, member: discord.Member = None):
     member = ctx.message.author
 
   embed = discord.Embed(title = "Ugly Ass Avatar of " + str(member), colour=discord.Colour.dark_purple())
-  embed.set_image(url=member.avatar_url)
-  embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url = ctx.author.avatar_url)
+  embed.set_image(url=member.display_avatar)
+  embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url = ctx.author.display_avatar)
   await ctx.send(embed=embed)
 
 
@@ -178,7 +174,7 @@ async def mwa(ctx):
 
 @client.command()
 async def kiss(ctx, member: discord.Member = None):
-  if not member or ctx.message.author == member:
+  if not member:
     await ctx.send(f'{ctx.message.author.mention} so lonely trying to kiss your self :skull:')
   else:
     await ctx.send(f'{ctx.message.author.mention} kissed {member.mention} pretty sexy')
@@ -203,6 +199,10 @@ async def nick(ctx, member: discord.Member = None, *, nick):
 async def ineedhelp(ctx):
   await ctx.send("I'd rather play Visual Studio Code retard")
 
+
+
+
+
 @client.command()
 async def meme(ctx):
   embed = discord.Embed(title="Dumb Fuck Shitpost", color = 0x0876DF)
@@ -210,8 +210,10 @@ async def meme(ctx):
     async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
         res = await r.json()
         embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
-        embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url=ctx.author.avatar.url)
+        embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url=ctx.author.display_avatar)
         await ctx.send(embed=embed)
+
+
 
 @client.command()
 async def sex(ctx, member: discord.Member = None):
