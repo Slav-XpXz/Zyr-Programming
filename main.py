@@ -213,7 +213,6 @@ async def meme(ctx):
         embed.set_footer(text=f'Requested by {ctx.message.author}', icon_url=ctx.author.avatar.url)
         await ctx.send(embed=embed)
 
-#send help asap pls i need help with this too
 @client.command()
 async def sex(ctx, member: discord.Member = None):
   if not member or ctx.message.author == member:
@@ -231,6 +230,12 @@ async def sex(ctx, member: discord.Member = None):
         await ctx.send(f'{ctx.message.author} got dommed by {str(member)}, kinda hot ngl.')
       else:
         await ctx.send('Are you fucking retarded? I gave you two fucking options that you could have copy pasted smh.')
+
+@client.command(alias=['8ball', 'magicball'])
+async def magic8ball(ctx):
+  responses = ['hell no, wtf?', 'bro stfu the answer is no, retard', 'no, plain and simple', 'dumbfuck, you already know the answer is no', 'yes daddy', 'yessir', 'yes, mf you should know this', 'although you may be bitchless, yes', 'maybe', 'idk tbh why you talking to an inanimate object', 'give nitro for answer', "could you repeat that? i can't hear you cuz ur such a squeaker"]
+  i = random.randint(0, 11)
+  ctx.send(responses[i])
 
 TOKEN = os.environ['token']
 keep_alive()
