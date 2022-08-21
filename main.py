@@ -15,13 +15,12 @@ client = commands.Bot(command_prefix='$', intents=intents)
 @client.event
 async def on_ready():
   print('Bot is online...')
+  statuses = ['League Of Legends', 'Fortnite', 'Valorant', 'Minecraft', 'Finding My Father', 'with my pussy', 'with nuclear missiles']
   while True:
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('League Of Legends'))
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('Fornite'))
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('Valorant'))
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('Minecraft'))
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('Finding my father'))
-    await client.change_presence(status=discord.Status.online, activity=discord.Game('with my pussy'))
+    for x in statuses:
+      await client.change_presence(status=discord.Status.online, activity=discord.Game(x))
+      await asyncio.sleep(69)
+
 @client.event
 async def on_command_error(ctx,error):
     if isinstance(error,commands.MissingPermissions):
@@ -41,7 +40,7 @@ async def on_command_error(ctx,error):
 async def kick(ctx, member : discord.Member, *, reason=None):
   embed = discord.Embed(title = "User Was Kicked From Server", color = 0xf03524)
   embed.add_field(name = "User Kicked", value = str(member))
-  embed.add_field(name = "Reason for Kick", value = reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.add_field(name = "Reason for Kick", value = reason + ' L Bozo + Ratio')
   embed.set_footer(text = f'Kicked by {ctx.message.author}', icon_url = ctx.author.avatar_url)
   await ctx.send(embed = embed)
   await member.send('You have been kicked from Zyr Programming Language for:' + reason)
@@ -54,7 +53,7 @@ async def kick(ctx, member : discord.Member, *, reason=None):
 async def ban(ctx, member : discord.Member, *, reason=None):
   embed = discord.Embed(title = "User Was Banned From Server", color = 0xcf2376)
   embed.add_field(name = "User Banned", value = str(member))
-  embed.add_field(name = "Reason for Ban", value = reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.add_field(name = "Reason for Ban", value = reason + ' L Bozo + Ratio')
   embed.set_footer(text = f'Banned by {ctx.message.author}', icon_url = ctx.author.avatar_url)
   await ctx.send(embed = embed)
   await member.send('You have been banned from Zyr Programming Language for:' + reason)
@@ -69,7 +68,7 @@ async def ban(ctx, member : discord.Member, *, reason=None):
 async def warn(ctx, member : discord.Member, *, reason=None):
   await member.send(f'you were warned in Zyr Programming Language for: {reason}')
   embed = discord.Embed(title = "User Warned", color = 0xfcc028)
-  embed.add_field(name = str(member), value = 'Warning: ' + reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+  embed.add_field(name = str(member), value = 'Warning: ' + reason + ' L Bozo + Ratio')
   embed.set_footer(text = f'Warned by {ctx.message.author}', icon_url = ctx.author.avatar_url)
   await ctx.send(embed = embed)
 
@@ -100,7 +99,7 @@ async def whois(ctx, member: discord.Member = None):
 @commands.has_permissions(manage_messages=True)
 async def mute(ctx, member: discord.Member, *, reason=None):
 	embed = discord.Embed(title = "User Muted", color = 0xFFC600)
-	embed.add_field(name = str(member), value = 'Muted: ' + reason + ' L Bozo + Ratio') #TODO fix it if theres no reason
+	embed.add_field(name = str(member), value = 'Muted: ' + reason + ' L Bozo + Ratio')
 	embed.set_footer(text = f'Muted by {ctx.message.author}', icon_url = ctx.author.avatar_url)
 	guild = ctx.guild
 	mutedRole = discord.utils.get(guild.roles, name="Muted")
@@ -179,7 +178,7 @@ async def mwa(ctx):
 
 @client.command()
 async def kiss(ctx, member: discord.Member = None):
-  if not member:
+  if not member or ctx.message.author == member:
     await ctx.send(f'{ctx.message.author.mention} so lonely trying to kiss your self :skull:')
   else:
     await ctx.send(f'{ctx.message.author.mention} kissed {member.mention} pretty sexy')
@@ -216,20 +215,28 @@ async def meme(ctx):
 
 @client.command()
 async def sex(ctx, member: discord.Member = None):
-  if not member:
+  if not member or ctx.message.author == member:
     await ctx.send(f'{ctx.message.author.mention}, nobody wants to see you jerk off. Please kys.')
   else:
     try:
       await ctx.send("Dom or Sub?")
-      msg = await client.wait_for('message', check=check, timeout=21)
+      msg = await client.wait_for('message', timeout=21)
+    except asyncio.TimeoutError:
+      await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
+    else:
       if msg.content.lower() == 'dom':
         await ctx.send(f'{ctx.message.author} dommed {str(member)}, kinda hot ngl.')
       elif msg.content.lower() == 'sub':
         await ctx.send(f'{ctx.message.author} got dommed by {str(member)}, kinda hot ngl.')
       else:
-        await ctx.send('Are you fuckng retarded?')
-    except:
-      await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
+        await ctx.send('Are you fucking retarded? I gave you two fucking options that you could have copy pasted smh.')
+
+@client.command(alias=['8ball', 'magicball'])
+async def magic8ball(ctx):
+  responses = ['hell no, wtf?', 'bro stfu the answer is no, retard', 'no, plain and simple', 'dumbfuck, you already know the answer is no', 'yes daddy', 'yessir', 'yes, mf you should know this', 'although you may be bitchless, yes', 'maybe', 'idk tbh why you talking to an inanimate object', 'give nitro for answer', "could you repeat that? i can't hear you cuz ur such a squeaker"]
+  i = random.randint(0, 11)
+  ctx.send(responses[i])
+
 TOKEN = os.environ['token']
 keep_alive()
 client.run(TOKEN)
