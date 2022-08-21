@@ -221,13 +221,13 @@ async def sex(ctx, member: discord.Member = None):
   else:
     try:
       await ctx.send("Dom or Sub?")
-      msg = await client.wait_for('message', check=check, timeout=21)
+      msg = await client.wait_for('message', timeout=21)
     except asyncio.TimeoutError:
       await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
     else:
-      if msg.lower() == 'dom':
+      if msg.content.lower() == 'dom':
         await ctx.send(f'{ctx.message.author} dommed {str(member)}, kinda hot ngl.')
-      elif msg.lower() == 'sub':
+      elif msg.content.lower() == 'sub':
         await ctx.send(f'{ctx.message.author} got dommed by {str(member)}, kinda hot ngl.')
       else:
         await ctx.send('Are you fucking retarded? I gave you two fucking options that you could have copy pasted smh.')
