@@ -226,7 +226,9 @@ async def sex(ctx, member: discord.Member = None):
   else:
     try:
       await ctx.send("Dom or Sub?")
-      msg = await client.wait_for('message', timeout=21)
+      def check(m):
+        return m.author == ctx.message.author and m.channel == ctx.message.channel
+      msg = await client.wait_for('message', check = check, timeout=21)
     except asyncio.TimeoutError:
       await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
     else:
