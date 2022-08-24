@@ -178,7 +178,7 @@ async def mwa(ctx):
 
 @client.command()
 async def kiss(ctx, member: discord.Member = None):
-  if not member:
+  if not member or ctx.message.author == member:
     await ctx.send(f'{ctx.message.author.mention} so lonely trying to kiss your self :skull:')
   else:
     await ctx.send(f'{ctx.message.author.mention} kissed {member.mention} pretty sexy')
@@ -246,6 +246,18 @@ async def magic8ball(ctx, * question):
   responses = ['hell no, wtf?', 'bro stfu the answer is no, retard', 'no, plain and simple', 'dumbfuck, you already know the answer is no', 'yes daddy', 'yessir', 'yes, mf you should know this', 'although you may be bitchless, yes', 'maybe', 'idk tbh why you talking to an inanimate object', 'give nitro for answer', "could you repeat that? i can't hear you cuz ur such a squeaker"]
   if question:
     await ctx.send(random.choice(responses))
+
+@client.command(aliases=['kill'])
+async def eliminate(ctx, member: discord.member = None, *, reason = None):
+  if not member or ctx.message.author == member:
+    await ctx.send('If you wanna kys, go ahead, nobody wants to waste their bullets on you lmao.')
+  else:
+    await ctx.send(f"(҂‾ ▵‾)︻デ═一 {member.mention}")
+    if not reason:
+      await ctx.send('The job is done.')
+    else:
+      await ctx.send(f'Target has been taken out for reason: {reason}')
+
 
 TOKEN = os.environ['token']
 keep_alive()
