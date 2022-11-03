@@ -12,11 +12,15 @@ intents.members = True
 intents.message_content = True
 intents.messages = True
 client = commands.Bot(command_prefix='$', intents=intents)
+statuses=['League Of Legends', 'Fortnite', 'Valorant', 'Minecraft', 'Roblox', 'with my pussy', 'with nukes', 'Finding My Father Simulator', 'Getting A Life Simulator', 'Getting Bitches Simulator']
 
 @client.event
 async def on_ready():
   print('Bot is online...')
-  await client.change_presence(status=discord.Status.online, activity=discord.Game('League Of Legends'))
+  while True:
+    for x in statuses:
+      await client.change_presence(status=discord.Status.online, activity=discord.Game(x))
+      await asyncio.sleep(69)
 @client.event
 async def on_command_error(ctx,error):
     if isinstance(error,commands.MissingPermissions):
@@ -174,7 +178,7 @@ async def mwa(ctx):
 
 @client.command()
 async def kiss(ctx, member: discord.Member = None):
-  if not member:
+  if not member or ctx.message.author == member:
     await ctx.send(f'{ctx.message.author.mention} so lonely trying to kiss your self :skull:')
   else:
     await ctx.send(f'{ctx.message.author.mention} kissed {member.mention} pretty sexy')
@@ -222,7 +226,9 @@ async def sex(ctx, member: discord.Member = None):
   else:
     try:
       await ctx.send("Dom or Sub?")
-      msg = await client.wait_for('message', timeout=21)
+      def check(m):
+        return m.author == ctx.message.author and m.channel == ctx.message.channel
+      msg = await client.wait_for('message', check = check, timeout=21)
     except asyncio.TimeoutError:
       await ctx.send('Are you fucking retarded? Try being faster at typing. You got legit 21 seconds to type 3 letters mf.')
     else:
@@ -232,6 +238,25 @@ async def sex(ctx, member: discord.Member = None):
         await ctx.send(f'{ctx.message.author} got dommed by {str(member)}, kinda hot ngl.')
       else:
         await ctx.send('Are you fucking retarded? I gave you two fucking options that you could have copy pasted smh.')
+
+@client.command(aliases=['8ball', 'magicball'])
+async def magic8ball(ctx, * question):
+  if not question:
+    await ctx.send('Tf is your question?')
+  responses = ['hell no, wtf?', 'bro stfu the answer is no, retard', 'no, plain and simple', 'dumbfuck, you already know the answer is no', 'yes daddy', 'yessir', 'yes, mf you should know this', 'although you may be bitchless, yes', 'maybe', 'idk tbh why you talking to an inanimate object', 'give nitro for answer', "could you repeat that? i can't hear you cuz ur such a squeaker"]
+  if question:
+    await ctx.send(random.choice(responses))
+
+@client.command(aliases=['kill'])
+async def eliminate(ctx, member: discord.member = None, *, reason = None):
+  if not member or ctx.message.author == member:
+    await ctx.send('If you wanna kys, go ahead, nobody wants to waste their bullets on you lmao.')
+  else:
+    await ctx.send(f"(҂‾ ▵‾)︻デ═一 {member.mention}")
+    if not reason:
+      await ctx.send('The job is done.')
+    else:
+      await ctx.send(f'Target has been taken out for reason: {reason}')
 
 
 TOKEN = os.environ['token']
